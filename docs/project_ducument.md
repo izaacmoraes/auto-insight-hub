@@ -172,6 +172,7 @@ O objetivo é: O usuário digita o sintoma -> Clica em Diagnosticar -> Aguarda (
 ### Output
 
 ## Documentação
+**Ferramenta utilizada** Codex:
 ### Prompt - README
 ```
 altere o README para refletir o projeto atual, coloque os seguintes passos:
