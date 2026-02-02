@@ -1,73 +1,46 @@
-# Welcome to your Lovable project
+# AutoDiagnostic AI
 
-## Project info
+## Resumo (o que é o projeto?)
+Aplicação web para diagnóstico veicular assistido por IA. O usuário descreve um sintoma em linguagem natural e o sistema apresenta uma análise com provável falha, zona do veículo afetada e passos recomendados. Há integração com Supabase (Edge Function `diagnose`) e fallback local baseado em uma base de conhecimento embutida.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Funcionalidades
+- Entrada de sintomas em linguagem natural com validação e atalhos de envio.
+- Diagnóstico via IA (Supabase Edge Function) com histórico de thread.
+- Fallback local por palavras-chave quando a IA não responde.
+- Visualizador do veículo com zonas clicáveis e destaque visual do problema.
+- Pipeline visual de processamento com etapas simuladas.
+- Cartões com urgência, peça em detalhe e ação recomendada.
+- Modo de depuração com testes rápidos.
 
-## How can I edit this code?
+## Organização das pastas
+- `src/pages/`: rotas da aplicação (entrada principal em `Index.tsx`).
+- `src/components/diagnostic/`: componentes do fluxo de diagnóstico (input, pipeline, resultado, viewer).
+- `src/components/ui/`: biblioteca de UI (shadcn/radix) reutilizável.
+- `src/data/`: base de conhecimento local (`diagnosticData.ts`) e PDFs de referência.
+- `src/integrations/supabase/`: cliente e tipos do Supabase.
+- `src/hooks/`: hooks utilitários (toast, responsividade).
+- `public/`: assets públicos (ícones e imagens).
+- `src/test/`: testes com Vitest.
 
-There are several ways of editing your application.
+## Como um usuário consegue utilizar?
+1. Acesse a aplicação no navegador (deploy ou ambiente local).
+2. Descreva o sintoma do veículo no painel à esquerda.
+3. Clique em “Diagnosticar” (ou pressione `Ctrl+Enter`).
+4. Analise o resultado, a zona destacada no veículo e os passos sugeridos.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Como replicar o projeto?
+1. Clone o repositório e instale as dependências.
+2. Configure o Supabase (URL e chave publishable) e a Edge Function `diagnose`.
+3. Rode o servidor de desenvolvimento.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone <SUA_URL_GIT>
+cd <NOME_DO_PROJETO>
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Defina as variáveis de ambiente:
+# VITE_SUPABASE_URL=...
+# VITE_SUPABASE_PUBLISHABLE_KEY=...
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
