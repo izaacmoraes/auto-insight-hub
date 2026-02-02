@@ -160,7 +160,7 @@ function CameraController({
   return null;
 }
 
-// Car model component with GLTF loading
+// Car model component - uses built-in FallbackCar since external CDNs are unreliable
 function CarModel({ 
   highlightZoneId,
   onModelLoaded
@@ -168,92 +168,21 @@ function CarModel({
   highlightZoneId: HighlightZoneId;
   onModelLoaded?: (nodes: Record<string, any>) => void;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const [modelError, setModelError] = useState<string | null>(null);
-  
-  // Using Lamborghini Urus model from pmndrs CDN
-  const modelUrl = "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/lamborghini-urus/model.gltf";
-  
-  let gltf: any = null;
-  let loadError: Error | null = null;
-  
-  try {
-    gltf = useGLTF(modelUrl);
-  } catch (e) {
-    loadError = e as Error;
-  }
-
-  // Log model nodes for debugging mesh names
   useEffect(() => {
-    if (gltf?.nodes) {
-      console.log('[CarViewer3D] Modelo carregado. Nodes disponíveis:', Object.keys(gltf.nodes));
-      console.log('[CarViewer3D] Estrutura completa do modelo:', gltf.nodes);
-      onModelLoaded?.(gltf.nodes);
-    }
-  }, [gltf, onModelLoaded]);
-
-  // Create highlight material
-  const highlightMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: new THREE.Color(0xff2222),
-    emissive: new THREE.Color(0xff0000),
-    emissiveIntensity: 1.2,
-    metalness: 0.4,
-    roughness: 0.3,
-  }), []);
-
-  // Check if a mesh should be highlighted
-  const shouldHighlight = (meshName: string): boolean => {
-    if (!highlightZoneId || !ZONE_MESH_PATTERNS[highlightZoneId]) return false;
-    
-    const patterns = ZONE_MESH_PATTERNS[highlightZoneId];
-    const lowerName = meshName.toLowerCase();
-    
-    return patterns.some(pattern => lowerName.includes(pattern.toLowerCase()));
-  };
-
-  // Apply highlight to matching meshes
-  useEffect(() => {
-    if (!gltf?.scene || !highlightZoneId) return;
-
-    const originalMaterials = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
-
-    gltf.scene.traverse((child: THREE.Object3D) => {
-      if (child instanceof THREE.Mesh) {
-        if (shouldHighlight(child.name)) {
-          originalMaterials.set(child, child.material);
-          child.material = highlightMaterial;
-          console.log('[CarViewer3D] Destacando mesh:', child.name);
-        }
-      }
+    // Report available nodes for debugging
+    onModelLoaded?.({
+      'body': 'Main car body',
+      'engine': 'Engine block',
+      'wheels': 'All four wheels',
+      'brakes': 'Brake system',
+      'suspension': 'Suspension components',
+      'exhaust': 'Exhaust system',
+      'headlights': 'Front lights',
+      'taillights': 'Rear lights'
     });
+  }, [onModelLoaded]);
 
-    // Cleanup: restore original materials
-    return () => {
-      originalMaterials.forEach((material, mesh) => {
-        mesh.material = material;
-      });
-    };
-  }, [gltf, highlightZoneId, highlightMaterial]);
-
-  if (loadError || modelError) {
-    return <FallbackCar highlightZoneId={highlightZoneId} />;
-  }
-
-  if (!gltf) {
-    return <FallbackCar highlightZoneId={highlightZoneId} />;
-  }
-
-  return (
-    <group ref={groupRef}>
-      <Center>
-        <primitive 
-          object={gltf.scene.clone()} 
-          scale={0.01}
-          position={[0, 0, 0]}
-        />
-      </Center>
-    </group>
-  );
+  return <FallbackCar highlightZoneId={highlightZoneId} />;
 }
 
 // Fallback low-poly car if GLTF fails to load
@@ -445,8 +374,7 @@ function FallbackCar({ highlightZoneId }: { highlightZoneId: HighlightZoneId }) 
   );
 }
 
-// Preload the model
-useGLTF.preload("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/lamborghini-urus/model.gltf");
+// No external model preload needed - using built-in FallbackCar
 
 interface CarViewer3DProps {
   highlightedZone?: VehicleZone;
