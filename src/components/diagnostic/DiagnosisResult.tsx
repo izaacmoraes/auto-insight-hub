@@ -1,17 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, AlertCircle, Info } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, Eye } from "lucide-react";
 import { DiagnosticResult } from "@/data/diagnosticData";
+import { VisualContext, getPartImage } from "@/data/partImagesMap";
 import PartDetailCard from "./PartDetailCard";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 
 interface DiagnosisResultProps {
   result: DiagnosticResult | null;
+  visualContext?: VisualContext | null;
   className?: string;
 }
 
-const DiagnosisResult = ({ result, className }: DiagnosisResultProps) => {
+const DiagnosisResult = ({ result, visualContext, className }: DiagnosisResultProps) => {
   if (!result) {
     return (
       <div className={cn("flex flex-col items-center justify-center h-full text-muted-foreground py-12", className)}>
@@ -102,9 +104,27 @@ const DiagnosisResult = ({ result, className }: DiagnosisResultProps) => {
             <div className="w-2 h-2 rounded-full bg-warning animate-pulse" />
             <span className="text-muted-foreground">Zona afetada:</span>
             <span className="text-foreground font-medium capitalize">
-              {result.zona?.replace(/_/g, ' ')}
+              {visualContext?.highlight_zone_id?.replace('zone_', '').replace(/_/g, ' ') || result.zona?.replace(/_/g, ' ')}
             </span>
           </div>
+
+          {/* Visual Context Info */}
+          {visualContext && (
+            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-border/30">
+              {visualContext.specific_part_name && (
+                <div className="flex items-center gap-1.5 text-xs">
+                  <Eye className="w-3 h-3 text-primary" />
+                  <span className="text-muted-foreground">Peça:</span>
+                  <span className="text-foreground font-medium">{visualContext.specific_part_name}</span>
+                </div>
+              )}
+              {visualContext.car_view_needed && (
+                <Badge variant="outline" className="text-xs">
+                  Vista: {visualContext.car_view_needed}
+                </Badge>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
