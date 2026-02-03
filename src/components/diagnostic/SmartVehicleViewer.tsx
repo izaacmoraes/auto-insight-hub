@@ -3,9 +3,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { VehicleZone, DiagnosticResult } from "@/data/diagnosticData";
 import { CarView, HighlightZoneId, VisualContext, mapZoneIdToVehicleZone } from "@/data/partImagesMap";
 import { cn } from "@/lib/utils";
-import { LateralView, MotorView, InferiorView } from "./vehicle-views";
+import { LateralView, FrontalView, MotorView, InferiorView } from "./vehicle-views";
 import PartPopup from "./PartPopup";
-import { Eye, Car, Wrench, ArrowDown } from "lucide-react";
+import { Car, Eye, Wrench, ArrowDown, Crosshair } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SmartVehicleViewerProps {
@@ -69,15 +69,13 @@ const SmartVehicleViewer = ({
     }
   };
 
-  // Get view button classes
-  const getViewButtonClass = (view: CarView) => {
-    return cn(
-      "flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
-      currentView === view
-        ? "bg-primary text-primary-foreground shadow-lg"
-        : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
-    );
-  };
+  // View configuration
+  const views: { id: CarView; label: string; icon: React.ReactNode }[] = [
+    { id: 'lateral', label: 'Lateral', icon: <Car className="w-4 h-4" /> },
+    { id: 'frontal', label: 'Frontal', icon: <Crosshair className="w-4 h-4" /> },
+    { id: 'motor', label: 'Motor', icon: <Wrench className="w-4 h-4" /> },
+    { id: 'inferior', label: 'Inferior', icon: <ArrowDown className="w-4 h-4" /> },
+  ];
 
   // Render the appropriate view
   const renderView = useMemo(() => {
@@ -87,6 +85,8 @@ const SmartVehicleViewer = ({
     };
 
     switch (currentView) {
+      case 'frontal':
+        return <FrontalView {...viewProps} />;
       case 'motor':
         return <MotorView {...viewProps} />;
       case 'inferior':
@@ -98,60 +98,48 @@ const SmartVehicleViewer = ({
   }, [currentView, activeZoneId]);
 
   return (
-    <div className={cn("relative w-full h-full flex flex-col", className)}>
-      {/* View Selector */}
-      <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCurrentView('lateral')}
-          className={getViewButtonClass('lateral')}
-        >
-          <Car className="w-3.5 h-3.5" />
-          Lateral
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCurrentView('motor')}
-          className={getViewButtonClass('motor')}
-        >
-          <Wrench className="w-3.5 h-3.5" />
-          Motor
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCurrentView('inferior')}
-          className={getViewButtonClass('inferior')}
-        >
-          <ArrowDown className="w-3.5 h-3.5" />
-          Inferior
-        </Button>
+    <div className={cn("relative w-full h-full flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950", className)}>
+      {/* View Selector Tabs */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20">
+        <div className="flex items-center gap-1 bg-slate-900/80 backdrop-blur-md border border-primary/20 rounded-lg p-1">
+          {views.map((view) => (
+            <Button
+              key={view.id}
+              variant="ghost"
+              size="sm"
+              onClick={() => setCurrentView(view.id)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 h-8 text-xs font-medium transition-all duration-300 rounded-md",
+                currentView === view.id
+                  ? "bg-primary/20 text-primary shadow-[0_0_15px_hsl(187_92%_44%/0.3)] border border-primary/40"
+                  : "text-muted-foreground hover:text-foreground hover:bg-slate-800/50"
+              )}
+            >
+              {view.icon}
+              <span className="hidden sm:inline">{view.label}</span>
+            </Button>
+          ))}
+        </div>
       </div>
 
-      {/* Current View Indicator */}
+      {/* Suggested View Indicator */}
       {visualContext?.car_view_needed && visualContext.car_view_needed !== currentView && (
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-4 right-4 z-20"
+          className="absolute top-3 right-3 z-20"
         >
           <Button
             variant="outline"
             size="sm"
             onClick={() => setCurrentView(visualContext.car_view_needed)}
-            className="bg-warning/20 border-warning text-warning hover:bg-warning/30 text-xs"
+            className="bg-warning/10 border-warning/50 text-warning hover:bg-warning/20 text-xs gap-1.5 h-8"
           >
-            <Eye className="w-3.5 h-3.5 mr-1" />
+            <Eye className="w-3.5 h-3.5" />
             Ver: {visualContext.car_view_needed}
           </Button>
         </motion.div>
       )}
-
-      {/* Background Effects */}
-      <div className="absolute inset-0 tech-grid opacity-30" />
-      <div className="absolute inset-0 gradient-radial-cyan" />
 
       {/* Part Detail Popup */}
       {result && (
@@ -163,42 +151,30 @@ const SmartVehicleViewer = ({
       )}
       
       {/* Main Vehicle View with Animation */}
-      <div className="flex-1 flex items-center justify-center p-4 pt-16">
+      <div className="flex-1 flex items-center justify-center p-4 pt-14">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentView}
-            className="w-full h-full max-w-4xl"
-            initial={{ opacity: 0, x: currentView === 'motor' ? 50 : currentView === 'inferior' ? 0 : -50, y: currentView === 'inferior' ? 50 : 0 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full h-full max-w-5xl"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
             {renderView}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-primary/40 border border-primary" />
-          <span>Normal</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-warning border border-warning animate-pulse" />
-          <span>Problema Detectado</span>
-        </div>
-      </div>
-
-      {/* Active Zone Info */}
+      {/* Active Zone Info Badge */}
       {activeZoneId && (
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-sm border border-border/50 rounded-lg px-3 py-2"
+          className="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-sm border border-warning/30 rounded-lg px-3 py-2 shadow-lg"
         >
           <p className="text-xs text-muted-foreground">
-            Zona selecionada: <span className="text-warning font-medium">{activeZoneId.replace('zone_', '').replace(/_/g, ' ')}</span>
+            Zona: <span className="text-warning font-semibold">{activeZoneId.replace('zone_', '').replace(/_/g, ' ').toUpperCase()}</span>
           </p>
         </motion.div>
       )}

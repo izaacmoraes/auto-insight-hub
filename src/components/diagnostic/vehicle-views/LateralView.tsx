@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { HighlightZoneId } from "@/data/partImagesMap";
 import { cn } from "@/lib/utils";
+import { AlertTriangle } from "lucide-react";
 
 interface LateralViewProps {
   highlightZoneId: HighlightZoneId;
@@ -8,239 +9,313 @@ interface LateralViewProps {
 }
 
 const LateralView = ({ highlightZoneId, onZoneClick }: LateralViewProps) => {
+  const isHighlighted = (zoneId: HighlightZoneId) => highlightZoneId === zoneId;
+
   const getZoneClasses = (zoneId: HighlightZoneId) => {
-    const isHighlighted = highlightZoneId === zoneId;
     return cn(
-      "transition-all duration-300 cursor-pointer",
-      isHighlighted 
-        ? "fill-warning stroke-warning animate-pulse" 
-        : "fill-primary/20 stroke-primary/60 hover:fill-primary/40 hover:stroke-primary"
+      "transition-all duration-500 cursor-pointer",
+      isHighlighted(zoneId)
+        ? "fill-[hsl(var(--warning))]/40 stroke-[hsl(var(--warning))]" 
+        : "fill-[hsl(var(--primary))]/10 stroke-[hsl(var(--primary))]/60 hover:fill-[hsl(var(--primary))]/30 hover:stroke-[hsl(var(--primary))]"
+    );
+  };
+
+  const getLabelClasses = (zoneId: HighlightZoneId) => {
+    return cn(
+      "text-[10px] font-medium transition-all duration-300",
+      isHighlighted(zoneId) ? "fill-[hsl(var(--warning))]" : "fill-[hsl(var(--muted-foreground))]"
     );
   };
 
   return (
-    <motion.svg
-      viewBox="0 0 800 400"
-      className="w-full h-full"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
-      style={{ filter: 'drop-shadow(0 0 20px hsl(187 92% 44% / 0.2))' }}
+    <motion.div
+      className="w-full h-full relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <defs>
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <filter id="warningGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* Car body outline */}
-      <g filter="url(#glow)">
-        <path
-          d="M 120 280 
-             L 120 220 
-             Q 130 180 180 170
-             L 280 160
-             Q 320 120 380 110
-             L 480 110
-             Q 540 115 580 150
-             L 650 170
-             Q 700 175 710 220
-             L 710 280
-             Q 700 290 680 290
-             L 640 290
-             Q 620 290 610 280
-             L 230 280
-             Q 220 290 200 290
-             L 160 290
-             Q 140 290 120 280
-             Z"
-          className="fill-secondary/30 stroke-primary"
-          strokeWidth="2"
-        />
-        
-        {/* Roof line */}
-        <path
-          d="M 280 160 Q 320 120 380 110 L 480 110 Q 540 115 580 150"
-          className="fill-none stroke-primary"
-          strokeWidth="1.5"
-        />
-        
-        {/* Windows */}
-        <path
-          d="M 290 158 Q 325 125 380 118 L 420 118 L 420 155 L 290 158 Z"
-          className="fill-primary/10 stroke-primary/60"
-          strokeWidth="1"
-        />
-        <path
-          d="M 430 118 L 475 118 Q 530 122 565 152 L 430 155 Z"
-          className="fill-primary/10 stroke-primary/60"
-          strokeWidth="1"
-        />
-        
-        {/* Door lines */}
-        <line x1="420" y1="155" x2="420" y2="270" className="stroke-primary/40" strokeWidth="1" />
-        
-        {/* Hood lines */}
-        <path
-          d="M 650 170 L 690 180 Q 700 185 705 200"
-          className="fill-none stroke-primary/60"
-          strokeWidth="1"
-        />
-        
-        {/* Trunk lines */}
-        <path
-          d="M 180 170 L 140 185 Q 125 195 125 210"
-          className="fill-none stroke-primary/60"
-          strokeWidth="1"
-        />
-      </g>
-
-      {/* Headlights */}
-      <g
-        onClick={() => onZoneClick?.('zone_headlight')}
-        className={getZoneClasses('zone_headlight')}
-        filter={highlightZoneId === 'zone_headlight' ? 'url(#warningGlow)' : undefined}
+      <svg
+        viewBox="0 0 900 450"
+        className="w-full h-full"
+        style={{ filter: 'drop-shadow(0 0 30px hsl(187 92% 44% / 0.15))' }}
       >
-        <ellipse cx="700" cy="215" rx="12" ry="18" strokeWidth="1.5" fillOpacity="0.4" />
-      </g>
-      
-      {/* Taillights */}
-      <g
-        onClick={() => onZoneClick?.('zone_taillight')}
-        className={getZoneClasses('zone_taillight')}
-        filter={highlightZoneId === 'zone_taillight' ? 'url(#warningGlow)' : undefined}
-      >
-        <ellipse cx="130" cy="215" rx="10" ry="15" strokeWidth="1.5" fillOpacity="0.4" />
-      </g>
+        <defs>
+          {/* Grid pattern for blueprint effect */}
+          <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(187 92% 44% / 0.08)" strokeWidth="0.5" />
+          </pattern>
+          
+          {/* Glow filter for normal elements */}
+          <filter id="cyanGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          
+          {/* Warning glow for highlighted elements */}
+          <filter id="warningGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
 
-      {/* Engine Zone */}
-      <g 
-        onClick={() => onZoneClick?.('zone_engine_block')}
-        className={getZoneClasses('zone_engine_block')}
-        filter={highlightZoneId === 'zone_engine_block' ? 'url(#warningGlow)' : undefined}
-      >
-        <rect x="600" y="165" width="100" height="80" rx="8" strokeWidth="2" fillOpacity="0.3" />
-        <text x="650" y="210" textAnchor="middle" className="fill-current text-xs font-medium">MOTOR</text>
-      </g>
+          {/* Gradient for car body */}
+          <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(187 92% 44% / 0.15)" />
+            <stop offset="100%" stopColor="hsl(187 92% 44% / 0.05)" />
+          </linearGradient>
+        </defs>
 
-      {/* Front Wheel - Left */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_front_right')}
-        className={getZoneClasses('zone_wheel_front_right')}
-        filter={highlightZoneId === 'zone_wheel_front_right' ? 'url(#warningGlow)' : undefined}
-      >
-        <circle cx="620" cy="290" r="45" strokeWidth="2" fillOpacity="0.3" />
-        <circle cx="620" cy="290" r="35" className="fill-none stroke-current" strokeWidth="1" />
-        <circle cx="620" cy="290" r="15" className="fill-none stroke-current" strokeWidth="1" />
-        {[0, 60, 120, 180, 240, 300].map((angle) => (
-          <line 
-            key={angle}
-            x1={620 + 15 * Math.cos(angle * Math.PI / 180)} 
-            y1={290 + 15 * Math.sin(angle * Math.PI / 180)}
-            x2={620 + 35 * Math.cos(angle * Math.PI / 180)} 
-            y2={290 + 35 * Math.sin(angle * Math.PI / 180)}
-            className="stroke-current"
+        {/* Background Grid */}
+        <rect width="100%" height="100%" fill="url(#gridPattern)" />
+
+        {/* Car Body Outline - Sleek sedan profile */}
+        <g filter="url(#cyanGlow)">
+          {/* Main body shell */}
+          <path
+            d="M 130 300 
+               L 130 250 
+               Q 140 210 200 195
+               L 280 185
+               Q 340 140 420 125
+               L 540 125
+               Q 610 135 660 175
+               L 740 195
+               Q 800 205 810 250
+               L 810 300
+               Q 795 315 770 315
+               L 720 315
+               Q 690 315 680 295
+               L 280 295
+               Q 270 315 240 315
+               L 190 315
+               Q 160 315 130 300
+               Z"
+            fill="url(#bodyGradient)"
+            className="stroke-[hsl(var(--primary))]"
+            strokeWidth="2"
+          />
+          
+          {/* Roof line */}
+          <path
+            d="M 310 180 Q 360 135 420 125 L 540 125 Q 600 135 640 170"
+            className="fill-none stroke-[hsl(var(--primary))]"
+            strokeWidth="1.5"
+          />
+          
+          {/* Front window */}
+          <path
+            d="M 320 178 Q 370 140 420 132 L 470 132 L 470 172 L 320 178 Z"
+            className="fill-[hsl(var(--primary))]/5 stroke-[hsl(var(--primary))]/40"
             strokeWidth="1"
           />
-        ))}
-      </g>
-
-      {/* Front Brake Zone */}
-      <g 
-        onClick={() => onZoneClick?.('zone_brake_front')}
-        className={getZoneClasses('zone_brake_front')}
-        filter={highlightZoneId === 'zone_brake_front' ? 'url(#warningGlow)' : undefined}
-      >
-        <circle cx="620" cy="290" r="25" strokeWidth="3" fillOpacity="0.2" strokeDasharray="5 3" />
-      </g>
-
-      {/* Rear Wheel */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_rear_left')}
-        className={getZoneClasses('zone_wheel_rear_left')}
-        filter={highlightZoneId === 'zone_wheel_rear_left' ? 'url(#warningGlow)' : undefined}
-      >
-        <circle cx="210" cy="290" r="45" strokeWidth="2" fillOpacity="0.3" />
-        <circle cx="210" cy="290" r="35" className="fill-none stroke-current" strokeWidth="1" />
-        <circle cx="210" cy="290" r="15" className="fill-none stroke-current" strokeWidth="1" />
-        {[0, 60, 120, 180, 240, 300].map((angle) => (
-          <line 
-            key={angle}
-            x1={210 + 15 * Math.cos(angle * Math.PI / 180)} 
-            y1={290 + 15 * Math.sin(angle * Math.PI / 180)}
-            x2={210 + 35 * Math.cos(angle * Math.PI / 180)} 
-            y2={290 + 35 * Math.sin(angle * Math.PI / 180)}
-            className="stroke-current"
+          
+          {/* Rear window */}
+          <path
+            d="M 485 132 L 540 132 Q 590 140 620 168 L 485 172 Z"
+            className="fill-[hsl(var(--primary))]/5 stroke-[hsl(var(--primary))]/40"
             strokeWidth="1"
           />
-        ))}
-      </g>
+          
+          {/* Door line */}
+          <line x1="480" y1="172" x2="480" y2="285" className="stroke-[hsl(var(--primary))]/30" strokeWidth="1" />
+          
+          {/* Door handle */}
+          <rect x="380" y="210" width="30" height="8" rx="2" className="fill-[hsl(var(--primary))]/20 stroke-[hsl(var(--primary))]/40" strokeWidth="0.5" />
+          
+          {/* Hood lines */}
+          <path d="M 740 195 L 790 210 Q 805 220 808 240" className="fill-none stroke-[hsl(var(--primary))]/40" strokeWidth="1" />
+          
+          {/* Trunk lines */}
+          <path d="M 200 195 L 150 215 Q 135 230 132 250" className="fill-none stroke-[hsl(var(--primary))]/40" strokeWidth="1" />
 
-      {/* Rear Brake Zone */}
-      <g 
-        onClick={() => onZoneClick?.('zone_brake_rear')}
-        className={getZoneClasses('zone_brake_rear')}
-        filter={highlightZoneId === 'zone_brake_rear' ? 'url(#warningGlow)' : undefined}
-      >
-        <circle cx="210" cy="290" r="25" strokeWidth="3" fillOpacity="0.2" strokeDasharray="5 3" />
-      </g>
+          {/* Side skirt line */}
+          <path d="M 190 290 L 750 290" className="fill-none stroke-[hsl(var(--primary))]/30" strokeWidth="0.5" />
+        </g>
 
-      {/* Exhaust Zone */}
-      <g 
-        onClick={() => onZoneClick?.('zone_exhaust')}
-        className={getZoneClasses('zone_exhaust')}
-        filter={highlightZoneId === 'zone_exhaust' ? 'url(#warningGlow)' : undefined}
-      >
-        <rect x="100" y="255" width="60" height="25" rx="4" strokeWidth="2" fillOpacity="0.3" />
-        <rect x="90" y="262" width="15" height="10" rx="2" className="fill-current" fillOpacity="0.5" />
-        <text x="130" y="272" textAnchor="middle" className="fill-current text-[10px]">ESCAPE</text>
-      </g>
+        {/* Engine Zone */}
+        <g 
+          onClick={() => onZoneClick?.('zone_engine_block')}
+          className={getZoneClasses('zone_engine_block')}
+          filter={isHighlighted('zone_engine_block') ? 'url(#warningGlow)' : undefined}
+        >
+          <rect x="700" y="185" width="95" height="85" rx="8" strokeWidth="2" fillOpacity="0.4" />
+          {/* Engine internal lines */}
+          <line x1="715" y1="200" x2="780" y2="200" className="stroke-current" strokeWidth="0.5" opacity="0.5" />
+          <line x1="715" y1="220" x2="780" y2="220" className="stroke-current" strokeWidth="0.5" opacity="0.5" />
+          <line x1="715" y1="240" x2="780" y2="240" className="stroke-current" strokeWidth="0.5" opacity="0.5" />
+          {isHighlighted('zone_engine_block') && (
+            <g className="animate-pulse">
+              <circle cx="795" cy="180" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="795" y="185" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="747" y="290" textAnchor="middle" className={getLabelClasses('zone_engine_block')}>MOTOR</text>
 
-      {/* Internal structure lines */}
-      <g className="stroke-primary/20" strokeWidth="0.5">
-        <rect x="610" y="175" width="80" height="55" rx="4" className="fill-none" />
-        <rect x="530" y="220" width="70" height="35" rx="4" className="fill-none" />
-        <line x1="530" y1="240" x2="280" y2="260" />
-        <line x1="620" y1="260" x2="620" y2="245" />
-        <line x1="590" y1="260" x2="570" y2="240" />
-        <line x1="210" y1="260" x2="210" y2="245" />
-        <line x1="240" y1="260" x2="280" y2="240" />
-        <path d="M 600 265 L 400 270 Q 300 272 200 270 L 105 267" className="fill-none" />
-      </g>
+        {/* Headlight */}
+        <g
+          onClick={() => onZoneClick?.('zone_headlight')}
+          className={getZoneClasses('zone_headlight')}
+          filter={isHighlighted('zone_headlight') ? 'url(#warningGlow)' : undefined}
+        >
+          <ellipse cx="800" cy="240" rx="14" ry="22" strokeWidth="1.5" fillOpacity="0.5" />
+          <ellipse cx="800" cy="240" rx="8" ry="14" className="fill-current" fillOpacity="0.3" />
+        </g>
 
-      {/* Zone Labels */}
-      <g className="fill-muted-foreground text-xs">
-        <text x="650" y="145" textAnchor="middle" className={highlightZoneId === 'zone_engine_block' ? 'fill-warning font-bold' : ''}>
-          Motor
+        {/* Taillight */}
+        <g
+          onClick={() => onZoneClick?.('zone_taillight')}
+          className={getZoneClasses('zone_taillight')}
+          filter={isHighlighted('zone_taillight') ? 'url(#warningGlow)' : undefined}
+        >
+          <ellipse cx="142" cy="235" rx="12" ry="18" strokeWidth="1.5" fillOpacity="0.5" />
+          <ellipse cx="142" cy="235" rx="6" ry="10" className="fill-current" fillOpacity="0.3" />
+        </g>
+
+        {/* Front Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_front_right')}
+          className={getZoneClasses('zone_wheel_front_right')}
+          filter={isHighlighted('zone_wheel_front_right') ? 'url(#warningGlow)' : undefined}
+        >
+          <circle cx="700" cy="310" r="52" strokeWidth="2.5" fillOpacity="0.2" />
+          <circle cx="700" cy="310" r="40" className="fill-none stroke-current" strokeWidth="1.5" />
+          <circle cx="700" cy="310" r="18" className="fill-none stroke-current" strokeWidth="1" />
+          <circle cx="700" cy="310" r="8" className="fill-current" fillOpacity="0.4" />
+          {/* Wheel spokes */}
+          {[0, 60, 120, 180, 240, 300].map((angle) => (
+            <line 
+              key={angle}
+              x1={700 + 18 * Math.cos(angle * Math.PI / 180)} 
+              y1={310 + 18 * Math.sin(angle * Math.PI / 180)}
+              x2={700 + 40 * Math.cos(angle * Math.PI / 180)} 
+              y2={310 + 40 * Math.sin(angle * Math.PI / 180)}
+              className="stroke-current"
+              strokeWidth="2"
+            />
+          ))}
+          {isHighlighted('zone_wheel_front_right') && (
+            <g className="animate-pulse">
+              <circle cx="750" cy="270" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="750" y="275" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="700" y="385" textAnchor="middle" className={getLabelClasses('zone_wheel_front_right')}>RODA DIANT.</text>
+
+        {/* Front Brake */}
+        <g 
+          onClick={() => onZoneClick?.('zone_brake_front')}
+          className={getZoneClasses('zone_brake_front')}
+          filter={isHighlighted('zone_brake_front') ? 'url(#warningGlow)' : undefined}
+        >
+          <circle cx="700" cy="310" r="28" strokeWidth="4" fillOpacity="0.15" strokeDasharray="8 4" />
+        </g>
+
+        {/* Rear Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_rear_left')}
+          className={getZoneClasses('zone_wheel_rear_left')}
+          filter={isHighlighted('zone_wheel_rear_left') ? 'url(#warningGlow)' : undefined}
+        >
+          <circle cx="230" cy="310" r="52" strokeWidth="2.5" fillOpacity="0.2" />
+          <circle cx="230" cy="310" r="40" className="fill-none stroke-current" strokeWidth="1.5" />
+          <circle cx="230" cy="310" r="18" className="fill-none stroke-current" strokeWidth="1" />
+          <circle cx="230" cy="310" r="8" className="fill-current" fillOpacity="0.4" />
+          {/* Wheel spokes */}
+          {[0, 60, 120, 180, 240, 300].map((angle) => (
+            <line 
+              key={angle}
+              x1={230 + 18 * Math.cos(angle * Math.PI / 180)} 
+              y1={310 + 18 * Math.sin(angle * Math.PI / 180)}
+              x2={230 + 40 * Math.cos(angle * Math.PI / 180)} 
+              y2={310 + 40 * Math.sin(angle * Math.PI / 180)}
+              className="stroke-current"
+              strokeWidth="2"
+            />
+          ))}
+          {isHighlighted('zone_wheel_rear_left') && (
+            <g className="animate-pulse">
+              <circle cx="280" cy="270" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="280" y="275" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="230" y="385" textAnchor="middle" className={getLabelClasses('zone_wheel_rear_left')}>RODA TRAS.</text>
+
+        {/* Rear Brake */}
+        <g 
+          onClick={() => onZoneClick?.('zone_brake_rear')}
+          className={getZoneClasses('zone_brake_rear')}
+          filter={isHighlighted('zone_brake_rear') ? 'url(#warningGlow)' : undefined}
+        >
+          <circle cx="230" cy="310" r="28" strokeWidth="4" fillOpacity="0.15" strokeDasharray="8 4" />
+        </g>
+
+        {/* Exhaust */}
+        <g 
+          onClick={() => onZoneClick?.('zone_exhaust')}
+          className={getZoneClasses('zone_exhaust')}
+          filter={isHighlighted('zone_exhaust') ? 'url(#warningGlow)' : undefined}
+        >
+          <path 
+            d="M 100 280 L 170 280 Q 180 280 180 290 L 180 305 Q 180 315 170 315 L 100 315 Q 90 315 90 305 L 90 290 Q 90 280 100 280 Z"
+            strokeWidth="2" 
+            fillOpacity="0.4" 
+          />
+          {/* Exhaust pipes */}
+          <ellipse cx="95" cy="290" rx="8" ry="6" className="fill-current" fillOpacity="0.6" />
+          <ellipse cx="95" cy="305" rx="8" ry="6" className="fill-current" fillOpacity="0.6" />
+          {isHighlighted('zone_exhaust') && (
+            <g className="animate-pulse">
+              <circle cx="140" cy="265" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="140" y="270" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="140" y="340" textAnchor="middle" className={getLabelClasses('zone_exhaust')}>ESCAPE</text>
+
+        {/* Internal connection lines (chassis structure) */}
+        <g className="stroke-[hsl(var(--primary))]/15" strokeWidth="0.75" fill="none">
+          {/* Drivetrain line */}
+          <path d="M 700 285 L 230 285" strokeDasharray="4 2" />
+          {/* Suspension connection */}
+          <path d="M 700 320 Q 650 340 600 340 L 330 340 Q 280 340 230 320" strokeDasharray="3 3" />
+        </g>
+
+        {/* View Title */}
+        <text x="450" y="35" textAnchor="middle" className="fill-[hsl(var(--primary))] text-sm font-bold tracking-widest">
+          VISTA LATERAL
         </text>
-        <text x="620" y="355" textAnchor="middle" className={highlightZoneId?.includes('front') ? 'fill-warning font-bold' : ''}>
-          Suspensão/Freios
-        </text>
-        <text x="210" y="355" textAnchor="middle" className={highlightZoneId?.includes('rear') ? 'fill-warning font-bold' : ''}>
-          Suspensão Traseira
-        </text>
-        <text x="130" y="300" textAnchor="middle" className={highlightZoneId === 'zone_exhaust' ? 'fill-warning font-bold' : ''}>
-          Escapamento
-        </text>
-      </g>
 
-      {/* Title */}
-      <text x="400" y="30" textAnchor="middle" className="fill-primary text-sm font-bold">
-        VISTA LATERAL
-      </text>
-    </motion.svg>
+        {/* Technical corner markers */}
+        <g className="stroke-[hsl(var(--primary))]/40" strokeWidth="1">
+          <path d="M 30 30 L 30 60 M 30 30 L 60 30" />
+          <path d="M 870 30 L 870 60 M 870 30 L 840 30" />
+          <path d="M 30 420 L 30 390 M 30 420 L 60 420" />
+          <path d="M 870 420 L 870 390 M 870 420 L 840 420" />
+        </g>
+      </svg>
+
+      {/* Legend */}
+      <div className="absolute bottom-2 left-4 flex items-center gap-6 text-xs">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-primary/30 border border-primary" />
+          <span className="text-muted-foreground">Normal</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-warning/50 border border-warning animate-pulse" />
+          <span className="text-muted-foreground">Problema</span>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
