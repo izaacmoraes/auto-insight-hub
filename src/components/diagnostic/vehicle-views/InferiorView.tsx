@@ -8,219 +8,336 @@ interface InferiorViewProps {
 }
 
 const InferiorView = ({ highlightZoneId, onZoneClick }: InferiorViewProps) => {
+  const isHighlighted = (zoneId: HighlightZoneId) => highlightZoneId === zoneId;
+
   const getZoneClasses = (zoneId: HighlightZoneId) => {
-    const isHighlighted = highlightZoneId === zoneId;
     return cn(
-      "transition-all duration-300 cursor-pointer",
-      isHighlighted 
-        ? "fill-warning stroke-warning animate-pulse" 
-        : "fill-primary/20 stroke-primary/60 hover:fill-primary/40 hover:stroke-primary"
+      "transition-all duration-500 cursor-pointer",
+      isHighlighted(zoneId)
+        ? "fill-[hsl(var(--warning))]/40 stroke-[hsl(var(--warning))]" 
+        : "fill-[hsl(var(--primary))]/10 stroke-[hsl(var(--primary))]/60 hover:fill-[hsl(var(--primary))]/30 hover:stroke-[hsl(var(--primary))]"
+    );
+  };
+
+  const getLabelClasses = (zoneId: HighlightZoneId) => {
+    return cn(
+      "text-[10px] font-medium transition-all duration-300",
+      isHighlighted(zoneId) ? "fill-[hsl(var(--warning))]" : "fill-[hsl(var(--muted-foreground))]"
     );
   };
 
   return (
-    <motion.svg
-      viewBox="0 0 800 500"
-      className="w-full h-full"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
-      style={{ filter: 'drop-shadow(0 0 20px hsl(187 92% 44% / 0.2))' }}
+    <motion.div
+      className="w-full h-full relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <defs>
-        <filter id="underGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* Car underside outline */}
-      <path
-        d="M 150 80 
-           L 650 80 
-           Q 700 90 720 120
-           L 720 380
-           Q 700 410 650 420
-           L 150 420
-           Q 100 410 80 380
-           L 80 120
-           Q 100 90 150 80
-           Z"
-        className="fill-secondary/20 stroke-primary/40"
-        strokeWidth="2"
-      />
-
-      {/* Front Axle */}
-      <line x1="150" y1="130" x2="650" y2="130" className="stroke-muted-foreground/50" strokeWidth="4" />
-      
-      {/* Rear Axle */}
-      <line x1="150" y1="370" x2="650" y2="370" className="stroke-muted-foreground/50" strokeWidth="4" />
-
-      {/* Drive Shaft */}
-      <rect x="390" y="130" width="20" height="240" rx="5" className="fill-muted-foreground/30 stroke-muted-foreground/50" strokeWidth="1" />
-
-      {/* Oil Pan / Engine Block */}
-      <g 
-        onClick={() => onZoneClick?.('zone_oil_pan')}
-        className={getZoneClasses('zone_oil_pan')}
-        filter={highlightZoneId === 'zone_oil_pan' ? 'url(#underGlow)' : undefined}
+      <svg
+        viewBox="0 0 900 550"
+        className="w-full h-full"
+        style={{ filter: 'drop-shadow(0 0 30px hsl(187 92% 44% / 0.15))' }}
       >
-        <rect x="300" y="90" width="200" height="80" rx="10" strokeWidth="2" fillOpacity="0.4" />
-        <text x="400" y="135" textAnchor="middle" className="fill-current text-xs font-medium">CÁRTER DO MOTOR</text>
-        {/* Drain plug */}
-        <circle cx="400" cy="155" r="8" className="fill-current" fillOpacity="0.5" />
-      </g>
+        <defs>
+          <pattern id="gridPatternInferior" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(187 92% 44% / 0.08)" strokeWidth="0.5" />
+          </pattern>
+          
+          <filter id="cyanGlowInferior" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          
+          <filter id="warningGlowInferior" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
 
-      {/* Transmission */}
-      <g 
-        onClick={() => onZoneClick?.('zone_transmission')}
-        className={getZoneClasses('zone_transmission')}
-        filter={highlightZoneId === 'zone_transmission' ? 'url(#underGlow)' : undefined}
-      >
-        <rect x="360" y="175" width="80" height="60" rx="8" strokeWidth="2" fillOpacity="0.4" />
-        <text x="400" y="210" textAnchor="middle" className="fill-current text-[10px] font-medium">CÂMBIO</text>
-      </g>
+          <linearGradient id="chassisGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(187 92% 44% / 0.08)" />
+            <stop offset="100%" stopColor="hsl(220 14% 10% / 0.95)" />
+          </linearGradient>
+        </defs>
 
-      {/* Exhaust System */}
-      <g 
-        onClick={() => onZoneClick?.('zone_exhaust')}
-        className={getZoneClasses('zone_exhaust')}
-        filter={highlightZoneId === 'zone_exhaust' ? 'url(#underGlow)' : undefined}
-      >
-        {/* Exhaust pipe path */}
-        <path 
-          d="M 500 130 L 500 180 Q 480 200 460 220 L 460 350 Q 450 370 430 380 L 200 380"
-          className="fill-none stroke-current"
-          strokeWidth="8"
-          strokeLinecap="round"
-          fillOpacity="0.3"
+        {/* Background Grid */}
+        <rect width="100%" height="100%" fill="url(#gridPatternInferior)" />
+
+        {/* Car underside outline */}
+        <path
+          d="M 180 80 
+             L 720 80 
+             Q 780 95 800 140
+             L 800 410
+             Q 780 455 720 470
+             L 180 470
+             Q 120 455 100 410
+             L 100 140
+             Q 120 95 180 80
+             Z"
+          fill="url(#chassisGradient)"
+          className="stroke-[hsl(var(--primary))]/30"
+          strokeWidth="2"
         />
-        <text x="330" y="360" textAnchor="middle" className="fill-current text-xs font-medium">ESCAPAMENTO</text>
-      </g>
 
-      {/* Catalytic Converter */}
-      <g 
-        onClick={() => onZoneClick?.('zone_catalytic')}
-        className={getZoneClasses('zone_catalytic')}
-        filter={highlightZoneId === 'zone_catalytic' ? 'url(#underGlow)' : undefined}
-      >
-        <ellipse cx="460" cy="280" rx="25" ry="40" strokeWidth="2" fillOpacity="0.4" />
-        <text x="460" y="340" textAnchor="middle" className="fill-current text-[10px] font-medium">CATALISADOR</text>
-      </g>
+        {/* Front Axle */}
+        <line x1="140" y1="140" x2="760" y2="140" className="stroke-[hsl(var(--muted-foreground))]/40" strokeWidth="6" />
+        
+        {/* Rear Axle */}
+        <line x1="140" y1="410" x2="760" y2="410" className="stroke-[hsl(var(--muted-foreground))]/40" strokeWidth="6" />
 
-      {/* Muffler */}
-      <g 
-        onClick={() => onZoneClick?.('zone_muffler')}
-        className={getZoneClasses('zone_muffler')}
-        filter={highlightZoneId === 'zone_muffler' ? 'url(#underGlow)' : undefined}
-      >
-        <rect x="180" y="360" width="80" height="40" rx="10" strokeWidth="2" fillOpacity="0.4" />
-        <text x="220" y="420" textAnchor="middle" className="fill-current text-[10px] font-medium">SILENCIADOR</text>
-      </g>
+        {/* Drive Shaft */}
+        <rect x="435" y="145" width="30" height="260" rx="8" className="fill-[hsl(var(--muted-foreground))]/20 stroke-[hsl(var(--muted-foreground))]/40" strokeWidth="1.5" />
 
-      {/* Fuel Tank */}
-      <g 
-        onClick={() => onZoneClick?.('zone_fuel_tank')}
-        className={getZoneClasses('zone_fuel_tank')}
-        filter={highlightZoneId === 'zone_fuel_tank' ? 'url(#underGlow)' : undefined}
-      >
-        <rect x="520" y="280" width="140" height="80" rx="10" strokeWidth="2" fillOpacity="0.4" />
-        <text x="590" y="325" textAnchor="middle" className="fill-current text-xs font-medium">TANQUE</text>
-      </g>
+        {/* Oil Pan */}
+        <g 
+          onClick={() => onZoneClick?.('zone_oil_pan')}
+          className={getZoneClasses('zone_oil_pan')}
+          filter={isHighlighted('zone_oil_pan') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="330" y="95" width="240" height="90" rx="12" strokeWidth="2" fillOpacity="0.4" />
+          {/* Drain plug */}
+          <circle cx="450" cy="165" r="12" className="fill-current" fillOpacity="0.5" />
+          <circle cx="450" cy="165" r="6" className="fill-none stroke-current" strokeWidth="1" />
+          {/* Oil pan ribbing */}
+          <line x1="350" y1="120" x2="550" y2="120" className="stroke-current" strokeWidth="0.75" opacity="0.4" />
+          <line x1="350" y1="145" x2="550" y2="145" className="stroke-current" strokeWidth="0.75" opacity="0.4" />
+          {isHighlighted('zone_oil_pan') && (
+            <g className="animate-pulse">
+              <circle cx="570" cy="100" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="570" y="105" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="450" y="205" textAnchor="middle" className={getLabelClasses('zone_oil_pan')}>CÁRTER DO MOTOR</text>
 
-      {/* Front Left Wheel */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_front_left')}
-        className={getZoneClasses('zone_wheel_front_left')}
-        filter={highlightZoneId === 'zone_wheel_front_left' ? 'url(#underGlow)' : undefined}
-      >
-        <ellipse cx="130" cy="130" rx="40" ry="30" strokeWidth="2" fillOpacity="0.3" />
-        <ellipse cx="130" cy="130" rx="20" ry="15" className="fill-none stroke-current" strokeWidth="1" />
-      </g>
+        {/* Transmission */}
+        <g 
+          onClick={() => onZoneClick?.('zone_transmission')}
+          className={getZoneClasses('zone_transmission')}
+          filter={isHighlighted('zone_transmission') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="395" y="195" width="110" height="75" rx="10" strokeWidth="2" fillOpacity="0.4" />
+          {/* Gear pattern */}
+          <circle cx="450" cy="232" r="20" className="fill-none stroke-current" strokeWidth="1" opacity="0.5" />
+          {isHighlighted('zone_transmission') && (
+            <g className="animate-pulse">
+              <circle cx="505" cy="195" r="10" className="fill-[hsl(var(--warning))]" />
+              <text x="505" y="199" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[8px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="450" y="290" textAnchor="middle" className={getLabelClasses('zone_transmission')}>CÂMBIO</text>
 
-      {/* Front Right Wheel */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_front_right')}
-        className={getZoneClasses('zone_wheel_front_right')}
-        filter={highlightZoneId === 'zone_wheel_front_right' ? 'url(#underGlow)' : undefined}
-      >
-        <ellipse cx="670" cy="130" rx="40" ry="30" strokeWidth="2" fillOpacity="0.3" />
-        <ellipse cx="670" cy="130" rx="20" ry="15" className="fill-none stroke-current" strokeWidth="1" />
-      </g>
+        {/* Exhaust System */}
+        <g 
+          onClick={() => onZoneClick?.('zone_exhaust')}
+          className={getZoneClasses('zone_exhaust')}
+          filter={isHighlighted('zone_exhaust') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          {/* Exhaust pipe path */}
+          <path 
+            d="M 570 140 L 570 200 Q 550 230 520 260 L 520 380 Q 510 410 480 420 L 220 420"
+            className="fill-none stroke-current"
+            strokeWidth="12"
+            strokeLinecap="round"
+          />
+          {isHighlighted('zone_exhaust') && (
+            <g className="animate-pulse">
+              <circle cx="520" cy="320" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="520" y="325" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="370" y="395" textAnchor="middle" className={getLabelClasses('zone_exhaust')}>ESCAPAMENTO</text>
 
-      {/* Rear Left Wheel */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_rear_left')}
-        className={getZoneClasses('zone_wheel_rear_left')}
-        filter={highlightZoneId === 'zone_wheel_rear_left' ? 'url(#underGlow)' : undefined}
-      >
-        <ellipse cx="130" cy="370" rx="40" ry="30" strokeWidth="2" fillOpacity="0.3" />
-        <ellipse cx="130" cy="370" rx="20" ry="15" className="fill-none stroke-current" strokeWidth="1" />
-      </g>
+        {/* Catalytic Converter */}
+        <g 
+          onClick={() => onZoneClick?.('zone_catalytic')}
+          className={getZoneClasses('zone_catalytic')}
+          filter={isHighlighted('zone_catalytic') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <ellipse cx="520" cy="310" rx="30" ry="50" strokeWidth="2" fillOpacity="0.4" />
+          {/* Honeycomb pattern hint */}
+          <ellipse cx="520" cy="310" rx="18" ry="35" className="fill-none stroke-current" strokeWidth="0.75" opacity="0.5" />
+          {isHighlighted('zone_catalytic') && (
+            <g className="animate-pulse">
+              <circle cx="550" cy="265" r="10" className="fill-[hsl(var(--warning))]" />
+              <text x="550" y="269" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[8px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="520" y="375" textAnchor="middle" className={getLabelClasses('zone_catalytic')}>CATALISADOR</text>
 
-      {/* Rear Right Wheel */}
-      <g 
-        onClick={() => onZoneClick?.('zone_wheel_rear_right')}
-        className={getZoneClasses('zone_wheel_rear_right')}
-        filter={highlightZoneId === 'zone_wheel_rear_right' ? 'url(#underGlow)' : undefined}
-      >
-        <ellipse cx="670" cy="370" rx="40" ry="30" strokeWidth="2" fillOpacity="0.3" />
-        <ellipse cx="670" cy="370" rx="20" ry="15" className="fill-none stroke-current" strokeWidth="1" />
-      </g>
+        {/* Muffler */}
+        <g 
+          onClick={() => onZoneClick?.('zone_muffler')}
+          className={getZoneClasses('zone_muffler')}
+          filter={isHighlighted('zone_muffler') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="180" y="395" width="100" height="55" rx="12" strokeWidth="2" fillOpacity="0.4" />
+          {/* Muffler exit pipe */}
+          <ellipse cx="165" cy="422" rx="10" ry="15" className="fill-current" fillOpacity="0.5" />
+          {isHighlighted('zone_muffler') && (
+            <g className="animate-pulse">
+              <circle cx="280" cy="395" r="10" className="fill-[hsl(var(--warning))]" />
+              <text x="280" y="399" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[8px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="230" y="470" textAnchor="middle" className={getLabelClasses('zone_muffler')}>SILENCIADOR</text>
 
-      {/* Front Suspension */}
-      <g 
-        onClick={() => onZoneClick?.('zone_suspension_front')}
-        className={getZoneClasses('zone_suspension_front')}
-        filter={highlightZoneId === 'zone_suspension_front' ? 'url(#underGlow)' : undefined}
-      >
-        <rect x="180" y="110" width="100" height="40" rx="5" strokeWidth="2" fillOpacity="0.3" />
-        <rect x="520" y="110" width="100" height="40" rx="5" strokeWidth="2" fillOpacity="0.3" />
-        <text x="400" y="80" textAnchor="middle" className="fill-current text-xs font-medium">SUSPENSÃO DIANTEIRA</text>
-      </g>
+        {/* Fuel Tank */}
+        <g 
+          onClick={() => onZoneClick?.('zone_fuel_tank')}
+          className={getZoneClasses('zone_fuel_tank')}
+          filter={isHighlighted('zone_fuel_tank') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="590" y="300" width="160" height="100" rx="12" strokeWidth="2" fillOpacity="0.4" />
+          {/* Fuel pump */}
+          <circle cx="670" cy="350" r="20" className="fill-current" fillOpacity="0.3" />
+          {/* Fuel lines */}
+          <path d="M 650 300 L 650 280 Q 650 270 640 270 L 580 270" className="fill-none stroke-current" strokeWidth="2" />
+          {isHighlighted('zone_fuel_tank') && (
+            <g className="animate-pulse">
+              <circle cx="750" cy="295" r="12" className="fill-[hsl(var(--warning))]" />
+              <text x="750" y="300" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[10px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="670" y="420" textAnchor="middle" className={getLabelClasses('zone_fuel_tank')}>TANQUE</text>
 
-      {/* Rear Suspension */}
-      <g 
-        onClick={() => onZoneClick?.('zone_suspension_rear')}
-        className={getZoneClasses('zone_suspension_rear')}
-        filter={highlightZoneId === 'zone_suspension_rear' ? 'url(#underGlow)' : undefined}
-      >
-        <rect x="180" y="350" width="100" height="40" rx="5" strokeWidth="2" fillOpacity="0.3" />
-        <rect x="520" y="350" width="100" height="40" rx="5" strokeWidth="2" fillOpacity="0.3" />
-        <text x="400" y="440" textAnchor="middle" className="fill-current text-xs font-medium">SUSPENSÃO TRASEIRA</text>
-      </g>
+        {/* Front Left Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_front_left')}
+          className={getZoneClasses('zone_wheel_front_left')}
+          filter={isHighlighted('zone_wheel_front_left') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <ellipse cx="140" cy="140" rx="50" ry="38" strokeWidth="2" fillOpacity="0.25" />
+          <ellipse cx="140" cy="140" rx="30" ry="22" className="fill-none stroke-current" strokeWidth="1.5" />
+          <ellipse cx="140" cy="140" rx="10" ry="8" className="fill-current" fillOpacity="0.5" />
+        </g>
 
-      {/* Brake Lines */}
-      <path 
-        d="M 200 130 L 200 200 L 300 200 M 600 130 L 600 200 L 500 200"
-        className="stroke-destructive/30"
-        strokeWidth="2"
-        fill="none"
-        strokeDasharray="4 2"
-      />
-      <path 
-        d="M 200 370 L 200 300 L 300 300 M 600 370 L 600 300 L 500 300"
-        className="stroke-destructive/30"
-        strokeWidth="2"
-        fill="none"
-        strokeDasharray="4 2"
-      />
+        {/* Front Right Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_front_right')}
+          className={getZoneClasses('zone_wheel_front_right')}
+          filter={isHighlighted('zone_wheel_front_right') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <ellipse cx="760" cy="140" rx="50" ry="38" strokeWidth="2" fillOpacity="0.25" />
+          <ellipse cx="760" cy="140" rx="30" ry="22" className="fill-none stroke-current" strokeWidth="1.5" />
+          <ellipse cx="760" cy="140" rx="10" ry="8" className="fill-current" fillOpacity="0.5" />
+        </g>
 
-      {/* Title */}
-      <text x="400" y="35" textAnchor="middle" className="fill-primary text-sm font-bold">
-        VISTA INFERIOR (CHASSIS)
-      </text>
+        {/* Rear Left Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_rear_left')}
+          className={getZoneClasses('zone_wheel_rear_left')}
+          filter={isHighlighted('zone_wheel_rear_left') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <ellipse cx="140" cy="410" rx="50" ry="38" strokeWidth="2" fillOpacity="0.25" />
+          <ellipse cx="140" cy="410" rx="30" ry="22" className="fill-none stroke-current" strokeWidth="1.5" />
+          <ellipse cx="140" cy="410" rx="10" ry="8" className="fill-current" fillOpacity="0.5" />
+        </g>
 
-      {/* Direction indicator */}
-      <g className="fill-muted-foreground">
-        <polygon points="400,460 390,475 410,475" />
-        <text x="400" y="490" textAnchor="middle" className="text-[10px]">FRENTE</text>
-      </g>
-    </motion.svg>
+        {/* Rear Right Wheel */}
+        <g 
+          onClick={() => onZoneClick?.('zone_wheel_rear_right')}
+          className={getZoneClasses('zone_wheel_rear_right')}
+          filter={isHighlighted('zone_wheel_rear_right') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <ellipse cx="760" cy="410" rx="50" ry="38" strokeWidth="2" fillOpacity="0.25" />
+          <ellipse cx="760" cy="410" rx="30" ry="22" className="fill-none stroke-current" strokeWidth="1.5" />
+          <ellipse cx="760" cy="410" rx="10" ry="8" className="fill-current" fillOpacity="0.5" />
+        </g>
+
+        {/* Front Suspension */}
+        <g 
+          onClick={() => onZoneClick?.('zone_suspension_front')}
+          className={getZoneClasses('zone_suspension_front')}
+          filter={isHighlighted('zone_suspension_front') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="200" y="115" width="120" height="50" rx="8" strokeWidth="2" fillOpacity="0.3" />
+          <rect x="580" y="115" width="120" height="50" rx="8" strokeWidth="2" fillOpacity="0.3" />
+          {/* Control arms */}
+          <line x1="200" y1="140" x2="140" y2="140" className="stroke-current" strokeWidth="3" />
+          <line x1="700" y1="140" x2="760" y2="140" className="stroke-current" strokeWidth="3" />
+          {isHighlighted('zone_suspension_front') && (
+            <g className="animate-pulse">
+              <circle cx="260" cy="100" r="10" className="fill-[hsl(var(--warning))]" />
+              <text x="260" y="104" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[8px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="450" y="75" textAnchor="middle" className={getLabelClasses('zone_suspension_front')}>SUSPENSÃO DIANTEIRA</text>
+
+        {/* Rear Suspension */}
+        <g 
+          onClick={() => onZoneClick?.('zone_suspension_rear')}
+          className={getZoneClasses('zone_suspension_rear')}
+          filter={isHighlighted('zone_suspension_rear') ? 'url(#warningGlowInferior)' : undefined}
+        >
+          <rect x="200" y="385" width="120" height="50" rx="8" strokeWidth="2" fillOpacity="0.3" />
+          <rect x="580" y="385" width="120" height="50" rx="8" strokeWidth="2" fillOpacity="0.3" />
+          {/* Control arms */}
+          <line x1="200" y1="410" x2="140" y2="410" className="stroke-current" strokeWidth="3" />
+          <line x1="700" y1="410" x2="760" y2="410" className="stroke-current" strokeWidth="3" />
+          {isHighlighted('zone_suspension_rear') && (
+            <g className="animate-pulse">
+              <circle cx="640" cy="455" r="10" className="fill-[hsl(var(--warning))]" />
+              <text x="640" y="459" textAnchor="middle" className="fill-[hsl(var(--warning-foreground))] text-[8px] font-bold">!</text>
+            </g>
+          )}
+        </g>
+        <text x="450" y="485" textAnchor="middle" className={getLabelClasses('zone_suspension_rear')}>SUSPENSÃO TRASEIRA</text>
+
+        {/* Brake Lines */}
+        <g className="stroke-destructive/25" strokeWidth="2" fill="none" strokeDasharray="6 3">
+          <path d="M 200 140 L 200 220 Q 200 240 220 240 L 380 240" />
+          <path d="M 700 140 L 700 220 Q 700 240 680 240 L 520 240" />
+          <path d="M 200 410 L 200 330 Q 200 310 220 310 L 380 310" />
+          <path d="M 700 410 L 700 330 Q 700 310 680 310 L 520 310" />
+        </g>
+
+        {/* View Title */}
+        <text x="450" y="40" textAnchor="middle" className="fill-[hsl(var(--primary))] text-sm font-bold tracking-widest">
+          VISTA INFERIOR (CHASSIS)
+        </text>
+
+        {/* Direction indicator */}
+        <g className="fill-[hsl(var(--muted-foreground))]">
+          <polygon points="450,510 440,525 460,525" />
+          <text x="450" y="540" textAnchor="middle" className="text-[10px]">FRENTE</text>
+        </g>
+
+        {/* Technical corner markers */}
+        <g className="stroke-[hsl(var(--primary))]/40" strokeWidth="1">
+          <path d="M 30 30 L 30 60 M 30 30 L 60 30" />
+          <path d="M 870 30 L 870 60 M 870 30 L 840 30" />
+          <path d="M 30 520 L 30 490 M 30 520 L 60 520" />
+          <path d="M 870 520 L 870 490 M 870 520 L 840 520" />
+        </g>
+      </svg>
+
+      {/* Legend */}
+      <div className="absolute bottom-2 left-4 flex items-center gap-6 text-xs">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-primary/30 border border-primary" />
+          <span className="text-muted-foreground">Normal</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-warning/50 border border-warning animate-pulse" />
+          <span className="text-muted-foreground">Problema</span>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
