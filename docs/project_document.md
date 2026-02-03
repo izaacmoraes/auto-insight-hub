@@ -16,7 +16,12 @@
 ## 5. uma lição para levar para a vida profissional
 
 ### Izaac Morais
-> Utilizar ferramentas de IA sem o conhecimento prévio ou domínio do que ta sendo gerado torna a solução refém da prórpria IA e, ao invés de automatizar, qualquer ajuste pode ser um grande desafio.
+>A IA atuou como um excelente assistente de desenvolvimento rápido, porém a estabilidade e a qualidade do software dependem inteiramente das decisões humanas.
+A evolução de algumas partes do projeto — especialmente a interface de front-end — só foi possível porque assumimos o controle do código gerado, definindo com precisão o comportamento esperado dos componentes.
+A IA gera código, mas é o engenheiro quem valida, garante a coerência e a confiabilidade do que está sendo produzido.
+Ferramentas como Lovable e OpenAI aceleram significativamente a escrita de código; entretanto, a definição da arquitetura, a tomada de decisões técnicas e a depuração continuam exigindo intervenção humana especializada. Isso torna o processo de desenvolvimento muito mais ágil e reforça a tendência de a IA se consolidar como uma ferramenta indispensável na área de software — não como mágica, mas como um recurso extremamente poderoso quando bem utilizado.
+
+
 ### Lucas de Carvalho
 ### Thiago Nogueira
 > A definição de metodologias e a organização rigorosa de um projeto são pilares essenciais, especialmente na Engenharia de Software. Negligenciar qualquer etapa, seja o planejamento, a definição de processos, a execução ou os testes, resulta invariavelmente em prejuízos e retrabalho. Nesse sentido, estabelecer checklists e fluxos de trabalho antes do início do desenvolvimento proporciona um ganho de eficiência significativo. Tal rigor é ainda mais crítico em projetos que envolvem Inteligência Artificial: se os requisitos e as solicitações (prompts) não forem estruturados com precisão, o risco de gerar funcionalidades falhas aumenta exponencialmente, tornando o retrabalho quase inevitável.
