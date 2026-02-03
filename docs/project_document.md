@@ -27,7 +27,7 @@ Ferramentas como Lovable e OpenAI aceleram significativamente a escrita de códi
 > A definição de metodologias e a organização rigorosa de um projeto são pilares essenciais, especialmente na Engenharia de Software. Negligenciar qualquer etapa, seja o planejamento, a definição de processos, a execução ou os testes, resulta invariavelmente em prejuízos e retrabalho. Nesse sentido, estabelecer checklists e fluxos de trabalho antes do início do desenvolvimento proporciona um ganho de eficiência significativo. Tal rigor é ainda mais crítico em projetos que envolvem Inteligência Artificial: se os requisitos e as solicitações (prompts) não forem estruturados com precisão, o risco de gerar funcionalidades falhas aumenta exponencialmente, tornando o retrabalho quase inevitável.
 
 ### Tobias Oliveira
-
+> Dois pontos principais: o olhar e conhecimento humano para supervisionar e intervir nas gerações via IA, bem como, a definição de boas práticas para o desenvolvimento com estas ferramentas. Estes são pontos fundamentais para a mudança de paradigma no desenvolvimento de software que a IA trouxe, fazendo que o profissional da área deva se atualizar e saber como usar estas ferramentas.
 
 # Descrição do Processo
 ## Requisitos
