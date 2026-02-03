@@ -1,5 +1,30 @@
-# Documento de Checklist do Projeto
+# Post-mortem
 
+## 1. o que funcionou bem no uso de IA?
+- Geração de Prompt via LLM (para o Lovable por exemplo)
+- Uso do Lovable pra contexto geral (como portótipo)
+- Uso do Gemini para criar os User Stories 
+## 2. o que não funcionou ou exigiu intervenção manual?
+- A integração com o OpenAI Assistants API, os integrantes não eram familizarizados com a plataforma e, ao delegar respostas de uso a uma LLM, acabou ocorrendo o uso de uma fumcionalidade mais obsoleta.
+- Refinamento da interface e features mais complexas no Lovable
+## 3. quanto tempo estimam que economizaram (ou perderam)?
+- Ganhamos por um lado e perdemos por outro lado
+## 4. o que fariam diferente se começassem de novo?
+- Definir melhor a gestão do projeto antes de colocar a mão na massa
+- Reduzir o uso de ferramentas de IA o máximo possível, para que o contexto consiga se manter o máximo possível em uma abordagem única
+- Estudar, o mínimo possível, as ferramentas a serem utilizadas antes de, de fato, utilizar. O trabalho de aprender enquanto faz, pode, em alguns casos, não ser interessante, pois há sempre um *trade-off* entre qualidade e tempo.
+## 5. uma lição para levar para a vida profissional
+
+### Izaac Morais
+> Utilizar ferramentas de IA sem o conhecimento prévio ou domínio do que ta sendo gerado torna a solução refém da prórpria IA e, ao invés de automatizar, qualquer ajuste pode ser um grande desafio.
+### Lucas de Carvalho
+### Thiago Nogueira
+> A definição de metodologias e a organização rigorosa de um projeto são pilares essenciais, especialmente na Engenharia de Software. Negligenciar qualquer etapa, seja o planejamento, a definição de processos, a execução ou os testes, resulta invariavelmente em prejuízos e retrabalho. Nesse sentido, estabelecer checklists e fluxos de trabalho antes do início do desenvolvimento proporciona um ganho de eficiência significativo. Tal rigor é ainda mais crítico em projetos que envolvem Inteligência Artificial: se os requisitos e as solicitações (prompts) não forem estruturados com precisão, o risco de gerar funcionalidades falhas aumenta exponencialmente, tornando o retrabalho quase inevitável.
+
+### Tobias Oliveira
+
+
+# Descrição do Processo
 ## Requisitos
 **Ferramenta utilizada: Gemini 3**
 ### Prompt
