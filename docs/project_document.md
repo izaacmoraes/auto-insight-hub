@@ -23,11 +23,14 @@ Ferramentas como Lovable e OpenAI aceleram significativamente a escrita de códi
 
 
 ### Lucas de Carvalho
+> Pude aprofundar meus conhecimentos sobre o uso da Inteligência Artificial e seus inúmeros recursos, compreendendo que, apesar de sua elevada capacidade de gerar respostas e auxiliar no desenvolvimento, a IA ainda não substitui a capacidade cognitiva humana, sendo a decisão final sempre de responsabilidade do desenvolvedor. Ao longo da disciplina, ficou evidente, na prática, que a organização de um bom escopo e a definição clara de um passo a passo são fundamentais para o sucesso de um projeto. Nesse contexto, compreendi que o processo de desenvolvimento é tão importante quanto a entrega final, e que o erro faz parte do aprendizado, preparando-nos melhor para desafios futuros. Além disso, uma metodologia de ensino bem estruturada, aliada a uma equipe colaborativa, torna a execução do projeto mais eficiente e tecnicamente consistente. Encerro esta disciplina com mais conhecimento, agilidade e confiança para executar projetos em maior escala, sentindo-me mais preparado para atuar na área de Engenharia de Software.
+
+
 ### Thiago Nogueira
 > A definição de metodologias e a organização rigorosa de um projeto são pilares essenciais, especialmente na Engenharia de Software. Negligenciar qualquer etapa, seja o planejamento, a definição de processos, a execução ou os testes, resulta invariavelmente em prejuízos e retrabalho. Nesse sentido, estabelecer checklists e fluxos de trabalho antes do início do desenvolvimento proporciona um ganho de eficiência significativo. Tal rigor é ainda mais crítico em projetos que envolvem Inteligência Artificial: se os requisitos e as solicitações (prompts) não forem estruturados com precisão, o risco de gerar funcionalidades falhas aumenta exponencialmente, tornando o retrabalho quase inevitável.
 
 ### Tobias Oliveira
-> Dois pontos principais: o olhar e conhecimento humano para supervisionar e intervir nas gerações via IA, bem como, a definição de boas práticas para o desenvolvimento com estas ferramentas. Estes são pontos fundamentais para a mudança de paradigma no desenvolvimento de software que a IA trouxe, fazendo que o profissional da área deva se atualizar e saber como usar estas ferramentas.
+
 
 # Descrição do Processo
 ## Requisitos
