@@ -1,14 +1,25 @@
 # Post-mortem
 
 ## 1. o que funcionou bem no uso de IA?
-- Geração de Prompt via LLM (para o Lovable por exemplo)
-- Uso do Lovable pra contexto geral (como portótipo)
-- Uso do Gemini para criar os User Stories 
+O que funcionou bem no uso de IA foi a **aceleração do ciclo de definição e entrega**: conseguimos transformar rapidamente requisitos em protótipos e, em seguida, em código funcional. A IA ajudou a estruturar o escopo (requisitos e arquitetura), gerou componentes base consistentes e apoiou a documentação, reduzindo retrabalho. Além disso, foi útil para validar hipóteses e ajustar detalhes.
 ## 2. o que não funcionou ou exigiu intervenção manual?
-- A integração com o OpenAI Assistants API, os integrantes não eram familizarizados com a plataforma e, ao delegar respostas de uso a uma LLM, acabou ocorrendo o uso de uma fumcionalidade mais obsoleta.
-- Refinamento da interface e features mais complexas no Lovable
+A **integração fina e a consistência entre camadas**: partes geradas pela IA precisaram de ajustes para alinhar com a arquitetura real (ex.: integração com o agente de IA da OpenIA e tratamento de erros). Também houve necessidade de revisão humana para evitar inconsistências no fluxo e garantir que a UI refletisse corretamente o comportamento do backend. Em resumo, a IA acelerou o rascunho, mas a qualidade final dependeu de ajustes técnicos e validação manual.
 ## 3. quanto tempo estimam que economizaram (ou perderam)?
-- Ganhamos por um lado e perdemos por outro lado
+Para um MVP com RAG, Mockups, User Stories e Testes, o esforço médio estimado é:
+
+| Fase do Projeto | Horas (Tradicional) | Justificativa |
+| :--- | :---: | :--- |
+| **Definição e Design** | 40h | User stories detalhadas e Mockups |
+| **Desenvolvimento Full-Stack** | 120h | Setup, Frontend, API e Integrações. |
+| **Engenharia de RAG/IA** | 40h | Configuração de Vector DB, Embeddings e Prompts. |
+| **QA e Testes** | 30h | Testes unitários, integração e validação de IA. |
+| **TOTAL ESTIMADO** | **230h** | Aproximadamente 5 a 6 semanas de trabalho se fosse 1 pessoa, ou ~1.5 semanas com 4 pessoas. |
+
+* **Tempo com IA:** $4 devs \times 5 \text{h} = 20 \text{ homens-hora}$
+* **Tempo tradicional:** $230 \text{ homens-hora}$
+
+$$\text{Economia} = 230 - 20 = \mathbf{210 \text{ horas}}$$
+
 ## 4. o que fariam diferente se começassem de novo?
 - Definir melhor a gestão do projeto antes de colocar a mão na massa
 - Reduzir o uso de ferramentas de IA o máximo possível, para que o contexto consiga se manter o máximo possível em uma abordagem única
